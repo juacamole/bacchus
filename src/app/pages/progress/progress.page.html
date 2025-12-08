@@ -13,10 +13,96 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-card>
+  <ion-card *ngIf="journeyData.length === 0">
     <ion-card-content>
-      <p>Progress Page - Under Development</p>
+      <p>No progress data yet. Start tracking your addictions to see your journey!</p>
     </ion-card-content>
   </ion-card>
-</ion-content>
 
+  <div *ngIf="journeyData.length > 0">
+    <!-- Summary Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Overall Progress</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-icon name="flame" color="warning" slot="start"></ion-icon>
+          <ion-label>
+            <h2>Total Streak Days</h2>
+            <p>{{ totalStreakDays }} days across all addictions</p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="checkmark-circle" color="success" slot="start"></ion-icon>
+          <ion-label>
+            <h2>Total Entries</h2>
+            <p>{{ totalEntries }} entries recorded</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Journey Cards -->
+    <ion-card *ngFor="let journey of journeyData">
+      <ion-card-header>
+        <ion-card-title>
+          {{ journey.addiction.name }}
+          <ion-badge [color]="getJourneyColor(journey.journeyProgress)" style="margin-left: 10px;">
+            {{ getJourneyStage(journey.journeyProgress) }}
+          </ion-badge>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div style="margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+            <span>Journey Progress</span>
+            <span>{{ journey.journeyProgress.toFixed(0) }}%</span>
+          </div>
+          <ion-progress-bar 
+            [value]="journey.journeyProgress / 100" 
+            [color]="getJourneyColor(journey.journeyProgress)">
+          </ion-progress-bar>
+        </div>
+
+        <ion-list>
+          <ion-item>
+            <ion-icon name="flame" color="warning" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Current Streak</h3>
+              <p>{{ journey.streak?.current_streak || 0 }} days</p>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item>
+            <ion-icon name="trophy" color="success" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Longest Streak</h3>
+              <p>{{ journey.streak?.longest_streak || 0 }} days</p>
+            </ion-label>
+          </ion-item>
+          
+          <ion-item>
+            <ion-icon name="checkmark-circle" color="primary" slot="start"></ion-icon>
+            <ion-label>
+              <h3>Total Entries</h3>
+              <p>{{ journey.totalEntries }} entries</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <!-- Journey Milestones -->
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--ion-color-light);">
+          <h4 style="margin-bottom: 10px;">Milestones</h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <ion-badge 
+              *ngFor="let milestone of [7, 30, 60, 90, 180, 365]"
+              [color]="(journey.streak?.current_streak || 0) >= milestone ? 'success' : 'medium'">
+              {{ milestone }}d
+            </ion-badge>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

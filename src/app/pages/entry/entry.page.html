@@ -15,7 +15,138 @@
 
   <ion-card>
     <ion-card-content>
-      <p>Entry Page - Under Development</p>
+      <ion-item>
+        <ion-label position="stacked">Filter by Addiction</ion-label>
+        <ion-select 
+          [(ngModel)]="selectedAddictionId" 
+          (ionChange)="onAddictionChange()"
+          placeholder="Select addiction">
+          <ion-select-option [value]="null">All Addictions</ion-select-option>
+          <ion-select-option *ngFor="let addiction of addictions" [value]="addiction.id">
+            {{ addiction.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
     </ion-card-content>
   </ion-card>
+
+  <div *ngIf="entries.length === 0" class="empty-state">
+    <ion-card>
+      <ion-card-content>
+        <p>No entries yet. Create your first entry!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ion-list *ngIf="entries.length > 0">
+    <ion-card *ngFor="let entry of entries">
+      <ion-card-header>
+        <ion-card-title>
+          {{ getAddictionName(entry.addiction_id) }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><ion-icon name="calendar"></ion-icon> {{ formatDate(entry.entry_date) }}</p>
+        
+        <ion-img 
+          *ngIf="entry.image_url" 
+          [src]="entry.image_url" 
+          style="max-height: 200px; object-fit: cover; margin: 10px 0;">
+        </ion-img>
+        
+        <p *ngIf="entry.notes">{{ entry.notes }}</p>
+        
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+          <ion-button 
+            fill="outline" 
+            size="small"
+            (click)="openEditModal(entry)">
+            Edit
+          </ion-button>
+          <ion-button 
+            fill="outline" 
+            color="danger" 
+            size="small"
+            (click)="deleteEntry(entry)">
+            <ion-icon name="trash" slot="start"></ion-icon>
+            Delete
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openAddModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-modal [isOpen]="isModalOpen" (willDismiss)="isModalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editingEntry ? 'Edit Entry' : 'New Entry' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isModalOpen = false">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-label position="stacked">Addiction *</ion-label>
+          <ion-select 
+            [(ngModel)]="formData.addiction_id" 
+            placeholder="Select addiction"
+            [disabled]="!!editingEntry">
+            <ion-select-option *ngFor="let addiction of addictions" [value]="addiction.id">
+              {{ addiction.name }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Date & Time</ion-label>
+          <ion-datetime-button datetime="datetime"></ion-datetime-button>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="datetime"
+                [(ngModel)]="formData.entry_date"
+                presentation="date-time"
+                showDefaultButtons="true">
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Image</ion-label>
+          <ion-button fill="outline" (click)="presentImageOptions()">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            {{ capturedImage ? 'Change Image' : 'Add Image' }}
+          </ion-button>
+        </ion-item>
+
+        <ion-img 
+          *ngIf="capturedImage" 
+          [src]="capturedImage" 
+          style="max-height: 200px; object-fit: cover; margin: 10px 0; border-radius: 8px;">
+        </ion-img>
+
+        <ion-item>
+          <ion-label position="stacked">Notes</ion-label>
+          <ion-textarea 
+            [(ngModel)]="formData.notes" 
+            placeholder="Add notes (optional)"
+            rows="4">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-button expand="block" (click)="saveEntry()" style="margin-top: 20px;">
+          {{ editingEntry ? 'Update' : 'Create' }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

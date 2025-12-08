@@ -28,4 +28,123 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Legal</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item button (click)="isAgbModalOpen = true">
+        <ion-icon name="document-text" slot="start"></ion-icon>
+        <ion-label>Terms and Conditions (AGB)</ion-label>
+      </ion-item>
+      <ion-item button (click)="isPrivacyModalOpen = true">
+        <ion-icon name="shield-checkmark" slot="start"></ion-icon>
+        <ion-label>Privacy Policy / Data Handling</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="currentUser">
+    <ion-card-header>
+      <ion-card-title>Account</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>
+          <h2>Logged in as</h2>
+          <p>{{ currentUser.email }}</p>
+        </ion-label>
+      </ion-item>
+      <ion-button expand="block" color="danger" (click)="signOut()">
+        <ion-icon name="log-out" slot="start"></ion-icon>
+        Sign Out
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- AGB Modal -->
+  <ion-modal [isOpen]="isAgbModalOpen" (willDismiss)="isAgbModalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Terms and Conditions (AGB)</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isAgbModalOpen = false">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <h2>Allgemeine Geschäftsbedingungen</h2>
+        <p><strong>Stand:</strong> {{ currentDate }}</p>
+        
+        <h3>1. Geltungsbereich</h3>
+        <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung der mobilen Anwendung "Bacchus+" (nachfolgend "App" genannt).</p>
+        
+        <h3>2. Zweck der App</h3>
+        <p>Bacchus+ ist eine Hybrid-Applikation zur Verbesserung und Dokumentation von Süchten. Die App bietet Funktionen zur Erfassung, Verfolgung und Motivation im Umgang mit Abhängigkeiten.</p>
+        
+        <h3>3. Nutzung</h3>
+        <p>Die App darf nur für persönliche, nicht-kommerzielle Zwecke genutzt werden. Der Nutzer ist verantwortlich für die Richtigkeit der eingegebenen Daten.</p>
+        
+        <h3>4. Haftung</h3>
+        <p>Die App wird "wie besehen" bereitgestellt. Der Entwickler übernimmt keine Haftung für Schäden, die durch die Nutzung der App entstehen.</p>
+        
+        <h3>5. Datenschutz</h3>
+        <p>Die Erhebung und Verarbeitung personenbezogener Daten erfolgt gemäß der Datenschutzerklärung.</p>
+        
+        <h3>6. Änderungen</h3>
+        <p>Der Entwickler behält sich vor, diese AGB jederzeit zu ändern. Änderungen werden in der App veröffentlicht.</p>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Privacy Modal -->
+  <ion-modal [isOpen]="isPrivacyModalOpen" (willDismiss)="isPrivacyModalOpen = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Privacy Policy / Data Handling</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isPrivacyModalOpen = false">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <h2>Datenschutzerklärung</h2>
+        <p><strong>Stand:</strong> {{ currentDate }}</p>
+        
+        <h3>1. Verantwortlicher</h3>
+        <p>Verantwortlich für die Datenverarbeitung ist der Entwickler der App Bacchus+.</p>
+        
+        <h3>2. Erhobene Daten</h3>
+        <p>Die App erhebt und speichert folgende Daten:</p>
+        <ul>
+          <li>Benutzerkonto-Informationen (E-Mail-Adresse)</li>
+          <li>Eingetragene Süchte und deren Details</li>
+          <li>Konsum-Einträge mit optionalen Bildern</li>
+          <li>Streak-Daten und Fortschrittsinformationen</li>
+          <li>App-Einstellungen (z.B. Dark Mode)</li>
+        </ul>
+        
+        <h3>3. Speicherung</h3>
+        <p>Die Daten werden in Supabase gespeichert, einem Cloud-Datenbankdienst. Die Daten werden verschlüsselt übertragen und gespeichert.</p>
+        
+        <h3>4. Lokale Speicherung</h3>
+        <p>Einige Einstellungen werden lokal auf dem Gerät gespeichert. Bilder werden in Supabase Storage gespeichert.</p>
+        
+        <h3>5. Datenzugriff</h3>
+        <p>Nur der angemeldete Benutzer hat Zugriff auf seine eigenen Daten. Die Daten werden durch Row Level Security (RLS) geschützt.</p>
+        
+        <h3>6. Löschung</h3>
+        <p>Benutzer können ihre Daten jederzeit löschen, indem sie ihr Konto löschen oder einzelne Einträge entfernen.</p>
+        
+        <h3>7. Weitergabe</h3>
+        <p>Daten werden nicht an Dritte weitergegeben, außer es ist gesetzlich vorgeschrieben.</p>
+        
+        <h3>8. Ihre Rechte</h3>
+        <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Widerspruch bezüglich Ihrer Daten. Kontaktieren Sie hierfür den App-Entwickler.</p>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
