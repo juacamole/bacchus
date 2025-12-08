@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Bacchus+
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Bacchus+</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Welcome to Bacchus+</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Your companion for continuous improvement</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card [routerLink]="['/tabs/focus']" button>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="flame"></ion-icon>
+        Focus Page
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      View current addiction data and get tips for improvement
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card [routerLink]="['/tabs/entry']" button>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="add-circle"></ion-icon>
+        Entry Page
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Manage consumption entries and record new entries
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card [routerLink]="['/tabs/progress']" button>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="stats-chart"></ion-icon>
+        Progress Page
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Visualize progress as a journey and display streak
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card [routerLink]="['/tabs/settings']" button>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="settings"></ion-icon>
+        Settings
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      App settings and personalization
+    </ion-card-content>
+  </ion-card>
+</ion-content>
