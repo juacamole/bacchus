@@ -1,0 +1,92 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Bacchus+
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="login-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          {{ isSignUp ? 'Create Account' : 'Welcome Back' }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p style="text-align: center; margin-bottom: 20px;">
+          {{ isSignUp ? 'Sign up to start tracking your journey' : 'Sign in to continue' }}
+        </p>
+
+        <!-- Email/Password Form -->
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            placeholder="your@email.com"
+            [disabled]="isLoading">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            [disabled]="isLoading">
+          </ion-input>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          (click)="isSignUp ? signUpWithEmail() : signInWithEmail()"
+          [disabled]="isLoading"
+          style="margin-top: 20px;">
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">{{ isSignUp ? 'Sign Up' : 'Sign In' }}</span>
+        </ion-button>
+
+        <ion-button
+          fill="clear"
+          expand="block"
+          (click)="toggleSignUp()"
+          [disabled]="isLoading"
+          style="margin-top: 10px;">
+          {{ isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up" }}
+        </ion-button>
+
+        <div style="margin: 30px 0; text-align: center; position: relative;">
+          <hr style="border: none; border-top: 1px solid var(--ion-color-medium);">
+          <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--ion-background-color); padding: 0 15px; color: var(--ion-color-medium);">
+            OR
+          </span>
+        </div>
+
+        <!-- OAuth Buttons -->
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="success"
+          (click)="signInWithOAuth('spotify')"
+          [disabled]="isLoading"
+          style="margin-bottom: 10px;">
+          <span slot="start" style="font-weight: bold; margin-right: 8px; color: #1DB954;">♪</span>
+          Continue with Spotify
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="signInWithOAuth('figma')"
+          [disabled]="isLoading">
+          <span slot="start" style="font-weight: bold; margin-right: 8px;">F</span>
+          Continue with Figma
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+

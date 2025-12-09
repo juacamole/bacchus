@@ -30,12 +30,23 @@ export class SupabaseService {
   }
 
   async signOut() {
-    return await this.supabase.auth.signOut();
+    const result = await this.supabase.auth.signOut();
+    return result;
   }
 
   async getSession() {
     const { data: { session } } = await this.supabase.auth.getSession();
     return session;
+  }
+
+  async signInWithOAuth(provider: 'spotify' | 'figma') {
+    const { data, error } = await this.supabase.auth.signInWithOAuth({
+      provider: provider,
+      options: {
+        redirectTo: window.location.origin + '/tabs/home'
+      }
+    });
+    return { data, error };
   }
 
   onAuthStateChange(callback: (event: string, session: any) => void) {

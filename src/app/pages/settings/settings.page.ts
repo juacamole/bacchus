@@ -89,10 +89,12 @@ export class SettingsPage implements OnInit {
           text: 'Sign Out',
           role: 'destructive',
           handler: async () => {
-            await this.supabaseService.signOut();
-            this.currentUser = null;
-            // Reload page to reset app state
-            window.location.reload();
+            const { error } = await this.supabaseService.signOut();
+            if (error) {
+              console.error('Error signing out:', error);
+            }
+            // Router will handle redirect via auth state change
+            window.location.href = '/login';
           }
         }
       ]
