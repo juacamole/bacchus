@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Capacitor } from '@capacitor/core';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -40,10 +41,30 @@ export class SupabaseService {
   }
 
   async signInWithOAuth(provider: 'spotify' | 'figma') {
+    // Determine redirect URL based on platform
+    let redirectTo: string;
+    
+    if (Capacitor.isNativePlatform()) {
+      // For mobile apps, use the app's URL scheme
+      // This should match your appId in capacitor.config.ts
+      redirectTo = 'io.ionic.starter://tabs/home';
+    } else {
+      // For web, use the current origin
+      // Only use origin if it's not localhost (production)
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // For local development, you might want to use a specific URL
+        // Or handle OAuth differently
+        redirectTo = window.location.origin + '/tabs/home';
+      } else {
+        // Production web URL
+        redirectTo = window.location.origin + '/tabs/home';
+      }
+    }
+
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: provider,
       options: {
-        redirectTo: window.location.origin + '/tabs/home'
+        redirectTo: redirectTo
       }
     });
     return { data, error };

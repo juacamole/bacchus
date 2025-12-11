@@ -31,6 +31,7 @@ import { addIcons } from 'ionicons';
 import { add, create, trash, flame } from 'ionicons/icons';
 import { AddictionService, Addiction } from '../../services/addiction.service';
 import { StreakService } from '../../services/streak.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-focus',
@@ -78,6 +79,7 @@ export class FocusPage implements OnInit {
   constructor(
     private addictionService: AddictionService,
     private streakService: StreakService,
+    private notificationService: NotificationService,
     private alertController: AlertController,
     private loadingController: LoadingController,
     private toastController: ToastController
@@ -202,6 +204,10 @@ export class FocusPage implements OnInit {
     if (level <= 3) return 'success';
     if (level <= 6) return 'warning';
     return 'danger';
+  }
+
+  getNotificationInterval(level: number): string {
+    return this.notificationService.getIntervalForLevel(level);
   }
 
   private async showToast(message: string, color: string = 'primary') {

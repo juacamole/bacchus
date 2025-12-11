@@ -13,7 +13,6 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonIcon,
   IonSpinner,
   ToastController,
   LoadingController
@@ -44,7 +43,6 @@ import { SupabaseService } from '../../services/supabase.service';
     IonLabel,
     IonInput,
     IonButton,
-    IonIcon,
     IonSpinner
   ],
 })

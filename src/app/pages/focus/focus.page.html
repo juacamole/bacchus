@@ -39,6 +39,9 @@
             Streak: {{ streaks.get(addiction.id || '') || 0 }} days
           </span>
         </div>
+        <div style="margin-top: 10px; color: var(--ion-color-medium); font-size: 0.9em;">
+          🔔 Reminders every {{ getNotificationInterval(addiction.level) }}
+        </div>
         <div style="margin-top: 15px; display: flex; gap: 10px;">
           <ion-button 
             fill="outline" 
@@ -104,6 +107,13 @@
             step="1"
             pin="true">
           </ion-range>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p style="color: var(--ion-color-medium); font-size: 0.9em;">
+              🔔 Reminders will be sent every {{ getNotificationInterval(formData.level) }}
+            </p>
+          </ion-label>
         </ion-item>
 
         <ion-button expand="block" (click)="saveAddiction()" style="margin-top: 20px;">

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
+import { NotificationService } from './notification.service';
 import { Observable, from } from 'rxjs';
 
 export interface Addiction {
@@ -16,7 +17,10 @@ export interface Addiction {
   providedIn: 'root'
 })
 export class AddictionService {
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService,
+    private notificationService: NotificationService
+  ) {}
 
   async getAllAddictions(): Promise<Addiction[]> {
     const user = await this.supabase.getCurrentUser();
@@ -62,6 +66,12 @@ export class AddictionService {
       .single();
 
     if (error) throw error;
+    
+    // Schedule notification for the new addiction
+    if (data) {
+      await this.notificationService.scheduleAddictionNotification(data);
+    }
+    
     return data;
   }
 
@@ -81,12 +91,21 @@ export class AddictionService {
       .single();
 
     if (error) throw error;
+    
+    // Reschedule notification if level or name changed
+    if (data && (updates.level !== undefined || updates.name !== undefined)) {
+      await this.notificationService.scheduleAddictionNotification(data);
+    }
+    
     return data;
   }
 
   async deleteAddiction(id: string): Promise<void> {
     const user = await this.supabase.getCurrentUser();
     if (!user) throw new Error('User not authenticated');
+
+    // Cancel notification before deleting
+    await this.notificationService.cancelAddictionNotification(id);
 
     const { error } = await this.supabase.getClient()
       .from('addictions')

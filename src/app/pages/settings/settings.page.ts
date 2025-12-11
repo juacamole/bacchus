@@ -15,13 +15,15 @@ import {
   IonButtons,
   IonModal,
   IonIcon,
-  AlertController
+  AlertController,
+  ToastController
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { documentText, shieldCheckmark, logOut } from 'ionicons/icons';
+import { documentText, shieldCheckmark, logOut, notifications } from 'ionicons/icons';
 import { ThemeService } from '../../services/theme.service';
 import { SupabaseService } from '../../services/supabase.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-settings',
@@ -60,9 +62,11 @@ export class SettingsPage implements OnInit {
   constructor(
     private themeService: ThemeService,
     private supabaseService: SupabaseService,
-    private alertController: AlertController
+    private notificationService: NotificationService,
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {
-    addIcons({ documentText, shieldCheckmark, logOut });
+    addIcons({ documentText, shieldCheckmark, logOut, notifications });
   }
 
   async ngOnInit() {
@@ -101,5 +105,59 @@ export class SettingsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async testNotification() {
+    try {
+      // Request permissions if not granted
+      const hasPermission = await this.notificationService.requestPermissions();
+      
+      if (!hasPermission) {
+        await this.showToast('Notification permissions are required. Please enable them in your device settings.', 'warning');
+        return;
+      }
+
+      // Send a test notification
+      const { LocalNotifications } = await import('@capacitor/local-notifications');
+      const { Capacitor } = await import('@capacitor/core');
+
+      if (Capacitor.getPlatform() === 'web') {
+        // Web notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Test Notification', {
+            body: 'This is a test notification from Bacchus+',
+            icon: '/assets/icon/favicon.png'
+          });
+          await this.showToast('Test notification sent!', 'success');
+        } else {
+          await this.showToast('Please enable notifications in your browser settings', 'warning');
+        }
+      } else {
+        // Native notification
+        await LocalNotifications.schedule({
+          notifications: [
+            {
+              id: 9999,
+              title: 'Test Notification',
+              body: 'This is a test notification from Bacchus+',
+              sound: 'default'
+            }
+          ]
+        });
+        await this.showToast('Test notification sent!', 'success');
+      }
+    } catch (error: any) {
+      await this.showToast('Error sending test notification: ' + (error.message || 'Unknown error'), 'danger');
+    }
+  }
+
+  private async showToast(message: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      color,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 }

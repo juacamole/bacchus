@@ -31,6 +31,21 @@
 
   <ion-card>
     <ion-card-header>
+      <ion-card-title>Notifications</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" fill="outline" (click)="testNotification()">
+        <ion-icon name="notifications" slot="start"></ion-icon>
+        Send Test Notification
+      </ion-button>
+      <p style="margin-top: 10px; color: var(--ion-color-medium); font-size: 0.9em; text-align: center;">
+        Test if notifications are working on your device
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
       <ion-card-title>Legal</ion-card-title>
     </ion-card-header>
     <ion-card-content>
