@@ -24,6 +24,7 @@ import { documentText, shieldCheckmark, logOut, notifications } from 'ionicons/i
 import { ThemeService } from '../../services/theme.service';
 import { SupabaseService } from '../../services/supabase.service';
 import { NotificationService } from '../../services/notification.service';
+import { HapticService } from '../../services/haptic.service';
 
 @Component({
   selector: 'app-settings',
@@ -64,7 +65,8 @@ export class SettingsPage implements OnInit {
     private supabaseService: SupabaseService,
     private notificationService: NotificationService,
     private alertController: AlertController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private hapticService: HapticService
   ) {
     addIcons({ documentText, shieldCheckmark, logOut, notifications });
   }
@@ -76,23 +78,29 @@ export class SettingsPage implements OnInit {
   }
 
   async toggleDarkMode() {
+    await this.hapticService.buttonClick();
     await this.themeService.toggleTheme();
     this.isDarkMode = this.themeService.isDark();
   }
 
   async signOut() {
+    await this.hapticService.destructive();
     const alert = await this.alertController.create({
       header: 'Sign Out',
       message: 'Are you sure you want to sign out?',
       buttons: [
         {
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          handler: async () => {
+            await this.hapticService.light();
+          }
         },
         {
           text: 'Sign Out',
           role: 'destructive',
           handler: async () => {
+            await this.hapticService.destructive();
             const { error } = await this.supabaseService.signOut();
             if (error) {
               console.error('Error signing out:', error);
@@ -108,6 +116,7 @@ export class SettingsPage implements OnInit {
   }
 
   async testNotification() {
+    await this.hapticService.buttonClick();
     try {
       // Request permissions if not granted
       const hasPermission = await this.notificationService.requestPermissions();
@@ -149,6 +158,26 @@ export class SettingsPage implements OnInit {
     } catch (error: any) {
       await this.showToast('Error sending test notification: ' + (error.message || 'Unknown error'), 'danger');
     }
+  }
+
+  async openAgbModal() {
+    await this.hapticService.buttonClick();
+    this.isAgbModalOpen = true;
+  }
+
+  async openPrivacyModal() {
+    await this.hapticService.buttonClick();
+    this.isPrivacyModalOpen = true;
+  }
+
+  async closeAgbModal() {
+    await this.hapticService.light();
+    this.isAgbModalOpen = false;
+  }
+
+  async closePrivacyModal() {
+    await this.hapticService.light();
+    this.isPrivacyModalOpen = false;
   }
 
   private async showToast(message: string, color: string = 'primary') {

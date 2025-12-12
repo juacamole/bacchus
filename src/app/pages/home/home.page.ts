@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonIcon } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { home, flame, addCircle, statsChart, settings } from 'ionicons/icons';
+import { HapticService } from '../../services/haptic.service';
 
 @Component({
   selector: 'app-home',
@@ -18,12 +19,34 @@ import { home, flame, addCircle, statsChart, settings } from 'ionicons/icons';
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonIcon,
-    RouterLink
+    IonIcon
   ],
 })
 export class HomePage {
-  constructor() {
+  constructor(
+    private router: Router,
+    private hapticService: HapticService
+  ) {
     addIcons({ home, flame, addCircle, statsChart, settings });
+  }
+
+  async navigateToFocus() {
+    await this.hapticService.buttonClick();
+    this.router.navigate(['/tabs/focus']);
+  }
+
+  async navigateToEntry() {
+    await this.hapticService.buttonClick();
+    this.router.navigate(['/tabs/entry']);
+  }
+
+  async navigateToProgress() {
+    await this.hapticService.buttonClick();
+    this.router.navigate(['/tabs/progress']);
+  }
+
+  async navigateToSettings() {
+    await this.hapticService.buttonClick();
+    this.router.navigate(['/tabs/settings']);
   }
 }

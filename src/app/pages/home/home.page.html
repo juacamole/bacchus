@@ -22,7 +22,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card [routerLink]="['/tabs/focus']" button>
+  <ion-card (click)="navigateToFocus()" button>
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="flame"></ion-icon>
@@ -34,7 +34,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card [routerLink]="['/tabs/entry']" button>
+  <ion-card (click)="navigateToEntry()" button>
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="add-circle"></ion-icon>
@@ -46,7 +46,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card [routerLink]="['/tabs/progress']" button>
+  <ion-card (click)="navigateToProgress()" button>
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="stats-chart"></ion-icon>
@@ -58,7 +58,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card [routerLink]="['/tabs/settings']" button>
+  <ion-card (click)="navigateToSettings()" button>
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="settings"></ion-icon>

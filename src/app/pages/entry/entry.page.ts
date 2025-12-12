@@ -36,6 +36,7 @@ import { ConsumptionEntryService, ConsumptionEntry } from '../../services/consum
 import { AddictionService, Addiction } from '../../services/addiction.service';
 import { ImageUploadService } from '../../services/image-upload.service';
 import { StreakService } from '../../services/streak.service';
+import { HapticService } from '../../services/haptic.service';
 
 @Component({
   selector: 'app-entry',
@@ -94,7 +95,8 @@ export class EntryPage implements OnInit {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private toastController: ToastController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    private hapticService: HapticService
   ) {
     addIcons({ add, camera, image, trash, calendar });
   }
@@ -136,7 +138,13 @@ export class EntryPage implements OnInit {
     await this.loadEntries();
   }
 
-  openAddModal() {
+  async closeModal() {
+    await this.hapticService.light();
+    this.isModalOpen = false;
+  }
+
+  async openAddModal() {
+    await this.hapticService.buttonClick();
     this.editingEntry = null;
     this.formData = {
       addiction_id: this.selectedAddictionId || '',
@@ -148,7 +156,8 @@ export class EntryPage implements OnInit {
     this.isModalOpen = true;
   }
 
-  openEditModal(entry: ConsumptionEntry) {
+  async openEditModal(entry: ConsumptionEntry) {
+    await this.hapticService.buttonClick();
     this.editingEntry = entry;
     this.formData = {
       addiction_id: entry.addiction_id,
@@ -161,6 +170,7 @@ export class EntryPage implements OnInit {
   }
 
   async presentImageOptions() {
+    await this.hapticService.buttonClick();
     const actionSheet = await this.actionSheetController.create({
       header: 'Select Image Source',
       buttons: [
@@ -212,6 +222,7 @@ export class EntryPage implements OnInit {
   }
 
   async saveEntry() {
+    await this.hapticService.buttonClick();
     if (!this.formData.addiction_id) {
       await this.showToast('Please select an addiction', 'warning');
       return;
@@ -255,18 +266,23 @@ export class EntryPage implements OnInit {
   }
 
   async deleteEntry(entry: ConsumptionEntry) {
+    await this.hapticService.destructive();
     const alert = await this.alertController.create({
       header: 'Delete Entry',
       message: 'Are you sure you want to delete this entry?',
       buttons: [
         {
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          handler: async () => {
+            await this.hapticService.light();
+          }
         },
         {
           text: 'Delete',
           role: 'destructive',
           handler: async () => {
+            await this.hapticService.destructive();
             const loading = await this.loadingController.create({
               message: 'Deleting...'
             });

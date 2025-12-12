@@ -49,11 +49,11 @@
       <ion-card-title>Legal</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-item button (click)="isAgbModalOpen = true">
+      <ion-item button (click)="openAgbModal()">
         <ion-icon name="document-text" slot="start"></ion-icon>
         <ion-label>Terms and Conditions (AGB)</ion-label>
       </ion-item>
-      <ion-item button (click)="isPrivacyModalOpen = true">
+      <ion-item button (click)="openPrivacyModal()">
         <ion-icon name="shield-checkmark" slot="start"></ion-icon>
         <ion-label>Privacy Policy / Data Handling</ion-label>
       </ion-item>
@@ -85,7 +85,7 @@
         <ion-toolbar>
           <ion-title>Terms and Conditions (AGB)</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="isAgbModalOpen = false">Close</ion-button>
+            <ion-button (click)="closeAgbModal()">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -121,7 +121,7 @@
         <ion-toolbar>
           <ion-title>Privacy Policy / Data Handling</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="isPrivacyModalOpen = false">Close</ion-button>
+            <ion-button (click)="closePrivacyModal()">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

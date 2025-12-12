@@ -59,7 +59,7 @@ export class NotificationService {
           {
             id: notificationId,
             title: 'Continue Your Addiction',
-            body: `Don't forget to continue your addiction: ${addiction.name}`,
+            body: `Don't forget to continue your ${addiction.name} addiction`,
             schedule: {
               at: new Date(Date.now() + intervalSeconds * 1000),
               repeats: true,
@@ -106,9 +106,9 @@ export class NotificationService {
     // Clamp level between 1 and 10
     const clampedLevel = Math.max(1, Math.min(10, level));
     
-    // Level 1: 60 minutes, Level 10: 5 minutes
-    // Linear interpolation: interval = 60 - (level - 1) * (60 - 5) / 9
-    const interval = 60 - (clampedLevel - 1) * (55 / 9);
+    // Level 1: 30 minutes, Level 10: 1 minute
+    // Linear interpolation: interval = 30 - (level - 1) * (30 - 1) / 9
+    const interval = 30 - (clampedLevel - 1) * (29 / 9);
     
     // Round to nearest minute
     return Math.round(interval);

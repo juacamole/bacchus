@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { mail } from 'ionicons/icons';
 import { SupabaseService } from '../../services/supabase.service';
+import { HapticService } from '../../services/haptic.service';
 
 @Component({
   selector: 'app-login',
@@ -56,7 +57,8 @@ export class LoginPage implements OnInit {
     private supabaseService: SupabaseService,
     private router: Router,
     private toastController: ToastController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private hapticService: HapticService
   ) {
     addIcons({ mail });
   }
@@ -70,6 +72,7 @@ export class LoginPage implements OnInit {
   }
 
   async signInWithEmail() {
+    await this.hapticService.buttonClick();
     if (!this.email || !this.password) {
       await this.showToast('Please enter email and password', 'warning');
       return;
@@ -95,6 +98,7 @@ export class LoginPage implements OnInit {
   }
 
   async signUpWithEmail() {
+    await this.hapticService.buttonClick();
     if (!this.email || !this.password) {
       await this.showToast('Please enter email and password', 'warning');
       return;
@@ -125,6 +129,7 @@ export class LoginPage implements OnInit {
   }
 
   async signInWithOAuth(provider: 'spotify' | 'figma') {
+    await this.hapticService.buttonClick();
     const loading = await this.loadingController.create({
       message: `Signing in with ${provider}...`
     });
@@ -143,7 +148,8 @@ export class LoginPage implements OnInit {
     }
   }
 
-  toggleSignUp() {
+  async toggleSignUp() {
+    await this.hapticService.buttonClick();
     this.isSignUp = !this.isSignUp;
     this.password = '';
   }

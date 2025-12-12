@@ -26,6 +26,12 @@ fi
 echo "✅ System images found"
 echo "📱 Starting emulator..."
 
-# Start the emulator
-emulator -avd Medium_Phone_API_36.1
+# Start the emulator with graphics fixes
+# -gpu swiftshader_indirect: Uses software rendering (fixes eglMakeCurrent errors)
+# -no-snapshot-load: Prevents loading corrupted snapshots
+# -no-audio: Disables audio (optional, can improve performance)
+emulator -avd Medium_Phone_API_36.1 \
+  -gpu swiftshader_indirect \
+  -no-snapshot-load \
+  -no-audio
 

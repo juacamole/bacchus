@@ -32,6 +32,7 @@ import { add, create, trash, flame } from 'ionicons/icons';
 import { AddictionService, Addiction } from '../../services/addiction.service';
 import { StreakService } from '../../services/streak.service';
 import { NotificationService } from '../../services/notification.service';
+import { HapticService } from '../../services/haptic.service';
 
 @Component({
   selector: 'app-focus',
@@ -82,7 +83,8 @@ export class FocusPage implements OnInit {
     private notificationService: NotificationService,
     private alertController: AlertController,
     private loadingController: LoadingController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private hapticService: HapticService
   ) {
     addIcons({ add, create, trash, flame });
   }
@@ -114,7 +116,8 @@ export class FocusPage implements OnInit {
     }
   }
 
-  openAddModal() {
+  async openAddModal() {
+    await this.hapticService.buttonClick();
     this.editingAddiction = null;
     this.formData = {
       name: '',
@@ -124,7 +127,8 @@ export class FocusPage implements OnInit {
     this.isModalOpen = true;
   }
 
-  openEditModal(addiction: Addiction) {
+  async openEditModal(addiction: Addiction) {
+    await this.hapticService.buttonClick();
     this.editingAddiction = addiction;
     this.formData = {
       name: addiction.name,
@@ -135,6 +139,7 @@ export class FocusPage implements OnInit {
   }
 
   async saveAddiction() {
+    await this.hapticService.buttonClick();
     if (!this.formData.name.trim()) {
       await this.showToast('Please enter a name', 'warning');
       return;
@@ -164,18 +169,23 @@ export class FocusPage implements OnInit {
   }
 
   async deleteAddiction(addiction: Addiction) {
+    await this.hapticService.destructive();
     const alert = await this.alertController.create({
       header: 'Delete Addiction',
       message: `Are you sure you want to delete "${addiction.name}"?`,
       buttons: [
         {
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
+          handler: async () => {
+            await this.hapticService.light();
+          }
         },
         {
           text: 'Delete',
           role: 'destructive',
           handler: async () => {
+            await this.hapticService.destructive();
             const loading = await this.loadingController.create({
               message: 'Deleting...'
             });
@@ -208,6 +218,11 @@ export class FocusPage implements OnInit {
 
   getNotificationInterval(level: number): string {
     return this.notificationService.getIntervalForLevel(level);
+  }
+
+  async closeModal() {
+    await this.hapticService.light();
+    this.isModalOpen = false;
   }
 
   private async showToast(message: string, color: string = 'primary') {

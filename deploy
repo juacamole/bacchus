@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Simple script to run Ionic app on emulator with live reload
-# Usage: ./run-app.sh [emulator-id]
+# Script to deploy Ionic app to Android emulator
+# Usage: ./deploy [emulator-id]
 
 # Set Android SDK environment variables
 export ANDROID_SDK_ROOT=/opt/android-sdk
@@ -16,7 +16,7 @@ if [ -z "$1" ]; then
     if [ -z "$DEVICES" ]; then
         echo "❌ No emulator found!"
         echo "   Please start the emulator first: ./start-emulator.sh"
-        echo "   Or specify emulator ID: ./run-app.sh emulator-5554"
+        echo "   Or specify emulator ID: ./deploy emulator-5554"
         exit 1
     fi
     
@@ -28,13 +28,32 @@ else
     echo "📱 Using emulator: $TARGET"
 fi
 
-# Check if www directory exists
-if [ ! -d "www" ]; then
-    echo "📦 Building web app first..."
-    npm run build
+# Build the web app first
+echo "📦 Building web app..."
+npm run build
+
+if [ $? -ne 0 ]; then
+    echo "❌ Build failed!"
+    exit 1
 fi
 
-# Run the app
-echo "🚀 Running app on $TARGET with live reload..."
-ionic capacitor run android -l --external --target=$TARGET
+# Sync Capacitor
+echo "🔄 Syncing Capacitor..."
+npx cap sync android
+
+if [ $? -ne 0 ]; then
+    echo "❌ Capacitor sync failed!"
+    exit 1
+fi
+
+# Deploy to emulator
+echo "🚀 Deploying app to $TARGET..."
+ionic capacitor run android --target=$TARGET
+
+if [ $? -eq 0 ]; then
+    echo "✅ Deployment successful!"
+else
+    echo "❌ Deployment failed!"
+    exit 1
+fi
 
